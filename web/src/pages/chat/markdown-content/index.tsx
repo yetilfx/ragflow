@@ -20,7 +20,11 @@ import { useTranslation } from 'react-i18next';
 
 import 'katex/dist/katex.min.css'; // `rehype-katex` does not import the CSS for you
 
-import { preprocessLaTeX, replaceThinkToSection } from '@/utils/chat';
+import {
+  preprocessLaTeX,
+  replaceThinkToSection,
+  showImage,
+} from '@/utils/chat';
 import { replaceTextByOldReg } from '../utils';
 
 import classNames from 'classnames';
@@ -46,6 +50,7 @@ const MarkdownContent = ({
   const { setDocumentIds, data: fileThumbnails } =
     useFetchDocumentThumbnailsByIds();
   const contentWithCursor = useMemo(() => {
+    // let text = DOMPurify.sanitize(content);
     let text = content;
     if (text === '') {
       text = t('chat.searching');
@@ -110,10 +115,6 @@ const MarkdownContent = ({
       const imageId = chunkItem?.image_id;
 
       return (
-        <Image id={imageId} className={styles.referenceChunkImage}></Image>
-      );
-
-      return (
         <div key={chunkItem?.id} className="flex gap-2">
           {imageId && (
             <Popover
@@ -176,9 +177,15 @@ const MarkdownContent = ({
   const renderReference = useCallback(
     (text: string) => {
       let replacedText = reactStringReplace(text, reg, (match, i) => {
+        const chunks = reference?.chunks ?? [];
         const chunkIndex = getChunkIndex(match);
-        return getPopoverContent(chunkIndex);
-        return (
+        const chunkItem = chunks[chunkIndex];
+        const imageId = chunkItem?.image_id;
+        const docType = chunkItem?.doc_type;
+
+        return showImage(docType) ? (
+          <Image id={imageId} className={styles.referenceChunkImage}></Image>
+        ) : (
           <Popover content={getPopoverContent(chunkIndex)} key={i}>
             <InfoCircleOutlined className={styles.referenceIcon} />
           </Popover>
@@ -191,7 +198,7 @@ const MarkdownContent = ({
 
       return replacedText;
     },
-    [getPopoverContent],
+    [getPopoverContent, reference?.chunks],
   );
 
   return (
