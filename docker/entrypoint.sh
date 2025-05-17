@@ -116,14 +116,35 @@ done
 # -----------------------------------------------------------------------------
 # Replace env variables in the service_conf.yaml file
 # -----------------------------------------------------------------------------
-CONF_DIR="/ragflow/conf"
-TEMPLATE_FILE="${CONF_DIR}/service_conf.yaml.template"
-CONF_FILE="${CONF_DIR}/service_conf.yaml"
+load_env_file() {
+    # Get the directory of the current script
+    local script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+    local env_file="$script_dir/.env"
 
-rm -f "${CONF_FILE}"
-while IFS= read -r line || [[ -n "$line" ]]; do
-    eval "echo \"$line\"" >> "${CONF_FILE}"
-done < "${TEMPLATE_FILE}"
+    # Check if .env file exists
+    if [ -f "$env_file" ]; then
+        echo "Loading environment variables from: $env_file"
+        # Source the .env file
+        set -a
+        source "$env_file" 
+        set +a
+        CONF_DIR="./conf"
+        TEMPLATE_FILE="./docker/service_conf.yaml.template"
+        CONF_FILE="${CONF_DIR}/service_conf.yaml"
+
+        rm -f "${CONF_FILE}"
+        while IFS= read -r line || [[ -n "$line" ]]; do
+            eval "echo \"$line\"" >> "${CONF_FILE}"
+        done < "${TEMPLATE_FILE}"
+        
+    else
+        echo "Warning: .env file not found at: $env_file"
+    fi
+}
+
+# Load environment variables
+load_env_file
+
 
 export LD_LIBRARY_PATH="/usr/lib/x86_64-linux-gnu/"
 PY=python3
@@ -162,9 +183,9 @@ if [[ "${ENABLE_WEBSERVER}" -eq 1 ]]; then
     # /usr/sbin/nginx
 
     echo "Starting ragflow_server..."
-    while true; do
+    #while true; do
         "$PY" api/ragflow_server.py
-    done &
+    #done &
 fi
 
 

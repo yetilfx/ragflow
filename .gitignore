@@ -46,4 +46,4 @@ nltk_data/
 docker/data
 tmp
 docker/.env
-conf/service.yaml
+conf/service_conf.yaml
