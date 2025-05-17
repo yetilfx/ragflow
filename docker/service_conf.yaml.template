@@ -9,10 +9,13 @@ mysql:
   port: 5455
   max_connections: 900
   stale_timeout: 300
-minio:
-  user: '${MINIO_USER:-rag_flow}'
-  password: '${MINIO_PASSWORD:-infini_rag_flow}'
-  host: '${MINIO_HOST:-minio}:9000'
+tos:
+  access_key: '${ACCESS_KEY}'
+  secret_key: '${SECRET_KEY}'
+  endpoint_url: '${ENDPOINT}'
+  region: '${REGION}'
+  bucket: '${BUCKET}'
+  prefix_path: '${TOS_PREFIX_PATH}'
 es:
   hosts: 'http://${ES_HOST:-es01}:1200'
   username: '${ES_USER:-elastic}'
@@ -29,6 +32,10 @@ redis:
   password: '${REDIS_PASSWORD:-infini_rag_flow}'
   host: '${REDIS_HOST:-redis}:6379'
 
+# minio:
+#   user: '${MINIO_USER:-rag_flow}'
+#   password: '${MINIO_PASSWORD:-infini_rag_flow}'
+#   host: '${MINIO_HOST:-minio}:9000'
 # postgres:
 #   name: '${POSTGRES_DBNAME:-rag_flow}'
 #   user: '${POSTGRES_USER:-rag_flow}'

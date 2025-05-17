@@ -22,6 +22,7 @@ from rag.utils.azure_spn_conn import RAGFlowAzureSpnBlob
 from rag.utils.minio_conn import RAGFlowMinio
 from rag.utils.s3_conn import RAGFlowS3
 from rag.utils.oss_conn import RAGFlowOSS
+from rag.utils.tos_conn import RAGFlowTOS
 
 
 class Storage(Enum):
@@ -30,6 +31,7 @@ class Storage(Enum):
     AZURE_SAS = 3
     AWS_S3 = 4
     OSS = 5
+    TOS = 6
 
 
 class StorageFactory:
@@ -39,6 +41,7 @@ class StorageFactory:
         Storage.AZURE_SAS: RAGFlowAzureSasBlob,
         Storage.AWS_S3: RAGFlowS3,
         Storage.OSS: RAGFlowOSS,
+        Storage.TOS: RAGFlowTOS,
     }
 
     @classmethod
