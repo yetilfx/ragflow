@@ -44,3 +44,6 @@ nltk_data/
 .lh/
 .venv
 docker/data
+tmp
+docker/.env
+conf/service.yaml
